@@ -4,8 +4,18 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ListItems',
-};
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import { getPokemons } from '@/services/index.ts';
+
+@Component
+export default class ListItems extends Vue {
+  getItems = () => {
+    getPokemons();
+  }
+
+  mounted() {
+    this.getItems();
+  }
+}
 </script>
