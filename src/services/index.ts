@@ -1,11 +1,12 @@
 const req = (query: string) => {
-  fetch('https://graphql-pokemon.now.sh/graphql', {
+  const result = fetch('https://graphql-pokemon.now.sh/graphql', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query }),
   })
     .then(res => res.json())
-    .then(res => console.log(res.data));
+    .then(res => res.data);
+  return result;
 };
 
 
@@ -15,5 +16,5 @@ export const getPokemons = () => {
       name
     }
   }`;
-  req(query);
+  return req(query);
 };

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <HeaderMenu />
-    <router-view/>
+    <router-view class="container" />
   </div>
 </template>
 
@@ -18,12 +18,17 @@ import HeaderMenu from '@/components/HeaderMenu.vue';
 export default class App extends Vue {}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 </style>
