@@ -13,9 +13,19 @@ const req = (query: string) => {
 export const getPokemons = () => {
   const query = `{
     pokemons(first: 10) {
+      id
       name
       number
       types
+    }
+  }`;
+  return req(query);
+};
+
+export const getPokemon = (id: string) => {
+  const query = `{
+    pokemon(id: "${id}") {
+      name
     }
   }`;
   return req(query);

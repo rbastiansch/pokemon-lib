@@ -1,23 +1,32 @@
 <template>
-  <article class="card">
-    <div class="card__main">
-      <img :src="linkImage"
-           :alt="info.name"
-           class="card__main__img"
-      >
-    </div>
-    <div class="card__info">
-      <div class="card__info__grouper">
-        <h1 class="card__info__grouper__title">{{ info.name }}</h1>
-        <span class="card__info__grouper__number">#{{ info.number }}</span>
-      </div>
-      <div class="card__info__types">
-        <span v-for="(type, key) in info.types"
-              :key="key"
-              class="card__info__types__single"
+  <article @click="toggleMoreInfo"
+           class="card"
+  >
+    <div v-if="!showMoreInfo">
+      <div class="card__main">
+        <img :src="linkImage"
+             :alt="info.name"
+             class="card__main__img"
         >
-          {{ type }}
-        </span>
+      </div>
+      <div class="card__info">
+        <div class="card__info__grouper">
+          <h1 class="card__info__grouper__title">{{ info.name }}</h1>
+          <span class="card__info__grouper__number">#{{ info.number }}</span>
+        </div>
+        <div class="card__info__types">
+          <span v-for="(type, key) in info.types"
+                :key="key"
+                class="card__info__types__single"
+          >
+            {{ type }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      <div v-if="Object.keys(infoItem).length">
+        Name: {{ infoItem.name }}
       </div>
     </div>
   </article>
@@ -25,15 +34,33 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { getPokemon } from '@/services/index';
 
 @Component
 export default class Card extends Vue {
   @Prop({ default: {} })
   info!: object;
 
+  private infoItem: object = {};
+
+  private showMoreInfo: Boolean = false;
+
   get linkImage() {
     const { number } = this.info;
     return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${number}.png`;
+  }
+
+  getMoreInfo() {
+    const { id } = this.info;
+    getPokemon(id)
+      .then((response) => {
+        this.infoItem = response.pokemon;
+      });
+  }
+
+  toggleMoreInfo() {
+    this.showMoreInfo = !this.showMoreInfo;
+    this.getMoreInfo();
   }
 }
 </script>
