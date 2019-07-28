@@ -40,10 +40,11 @@ export default class ListItems extends Vue {
 .list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 0px 30px;
+  justify-content: center;
+  padding: 0px 20px;
 }
 .list__item {
   flex-basis: 250px;
+  padding: 10px;
 }
 </style>

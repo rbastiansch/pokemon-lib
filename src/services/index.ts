@@ -14,6 +14,8 @@ export const getPokemons = () => {
   const query = `{
     pokemons(first: 10) {
       name
+      number
+      types
     }
   }`;
   return req(query);

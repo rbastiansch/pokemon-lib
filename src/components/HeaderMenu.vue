@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <header>
     <h1>Pokemon lib</h1>
-  </div>
+  </header>
 </template>
 
 <script>
