@@ -132,6 +132,24 @@ export default class Card extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/scss/_colors.scss';
 
+%button {
+  padding: 2px 8px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+%buttonGreen {
+  @extend %button;
+  background: $green;
+  color: $black;
+}
+
+%buttonPurple {
+  @extend %button;
+  background: $purple;
+  color: $white;
+}
+
 .card {
   padding: 15px 10px;
   background: $gray;
@@ -159,20 +177,14 @@ export default class Card extends Vue {
   text-align: left;
 }
 .card__info__types__single {
-  padding: 2px 8px;
-  border-radius: 5px;
-  margin-right: 10px;
   &:nth-child(odd) {
-    background: $green;
-    color: $black;
+    @extend %buttonGreen;
   }
   &:nth-child(even) {
-    background: $purple;
-    color: $white;
+    @extend %buttonPurple;
   }
 }
 
-.card__fullInfo {}
 .score {
   display: flex;
   justify-content: space-between;
@@ -211,6 +223,7 @@ export default class Card extends Vue {
 .attacks__item__line {
   display: flex;
   width: 100%;
+  margin: 2px 0px;
 }
 .attacks__item__line__title {
   flex: 1;
@@ -227,5 +240,8 @@ export default class Card extends Vue {
 }
 .attacks__item__line__value--bigger {
   flex: 2;
+}
+.attacks__item__line__value--label {
+  @extend %buttonGreen;
 }
 </style>
