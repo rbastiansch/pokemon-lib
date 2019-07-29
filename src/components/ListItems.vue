@@ -44,7 +44,8 @@ export default class ListItems extends Vue {
   padding: 0px 20px;
 }
 .list__item {
-  flex-basis: 250px;
-  padding: 10px;
+  flex-basis: 300px;
+  padding: 15px 10px;
+  min-height: 400px;
 }
 </style>

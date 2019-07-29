@@ -2,6 +2,7 @@
   <article @click="toggleMoreInfo"
            class="card"
   >
+    <Loader v-if="isLoading" />
     <div v-if="!showMoreInfo">
       <div class="card__main">
         <img :src="linkImage"
@@ -26,7 +27,45 @@
     </div>
     <div v-else>
       <div v-if="Object.keys(infoItem).length">
-        Name: {{ infoItem.name }}
+        <div class="card__fullInfo">
+          <div class="score">
+            <div class="score__item">
+              <span class="score__item__label">Max HP</span>
+              <span class="score__item__value">{{ infoItem.maxHP }}</span>
+            </div>
+            <div class="score__item">
+              <span class="score__item__label">Max CP</span>
+              <span class="score__item__value">{{ infoItem.maxCP }}</span>
+            </div>
+          </div>
+          <div class="attacks">
+            <div v-for="(attack, key) in arrayAtacks"
+                 :key="key"
+                 class="attacks__item"
+            >
+              <span class="attacks__item__title">{{ attack.name }} Attacks</span>
+              <div class="attacks__item__line">
+                <div class="attacks__item__line__title attacks__item__line__title--bigger">
+                  Attack
+                </div>
+                <div class="attacks__item__line__title">Type</div>
+                <div class="attacks__item__line__title">Power</div>
+              </div>
+              <div v-for="(item, key) in  attack.value"
+                   :key="key"
+                   class="attacks__item__line"
+              >
+                <span class="attacks__item__line__value attacks__item__line__value--bigger">
+                  {{ item.name }}
+                </span>
+                <span class="attacks__item__line__value attacks__item__line__value--label">
+                  {{ item.type }}
+                </span>
+                <span class="attacks__item__line__value">{{ item.damage }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </article>
@@ -34,9 +73,14 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import Loader from '@/components/Loader.vue';
 import { getPokemon } from '@/services/index';
 
-@Component
+@Component({
+  components: {
+    Loader,
+  },
+})
 export default class Card extends Vue {
   @Prop({ default: {} })
   info!: object;
@@ -45,30 +89,54 @@ export default class Card extends Vue {
 
   private showMoreInfo: Boolean = false;
 
+  private isLoading: Boolean = false;
+
   get linkImage() {
     const { number } = this.info;
     return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${number}.png`;
   }
 
+  get arrayAtacks() {
+    const { attacks } = this.infoItem;
+    if (!attacks) {
+      return [];
+    }
+    return Object.keys(attacks).map((item) => {
+      const obj = {
+        name: item,
+        value: attacks[item],
+      };
+      return obj;
+    });
+  }
+
   getMoreInfo() {
+    this.isLoading = true;
     const { id } = this.info;
     getPokemon(id)
       .then((response) => {
         this.infoItem = response.pokemon;
+        this.isLoading = false;
       });
   }
 
   toggleMoreInfo() {
     this.showMoreInfo = !this.showMoreInfo;
-    this.getMoreInfo();
+    if (!Object.keys(this.infoItem).length) {
+      this.getMoreInfo();
+    }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import '@/assets/scss/_colors.scss';
+
 .card {
-  border: 1px solid #e4e4e4;
   padding: 15px 10px;
+  background: $gray;
+  height: calc(100% - 30px);
+  border-radius: 5px;
 }
 .card__main__img {
   width: 100%;
@@ -95,12 +163,69 @@ export default class Card extends Vue {
   border-radius: 5px;
   margin-right: 10px;
   &:nth-child(odd) {
-    background: #86c786;
-    color: #000;
+    background: $green;
+    color: $black;
   }
   &:nth-child(even) {
-    background: #be81c3;
-    color: #fff;
+    background: $purple;
+    color: $white;
   }
+}
+
+.card__fullInfo {}
+.score {
+  display: flex;
+  justify-content: space-between;
+}
+.score__item {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 10px;
+  flex-basis: 80px;
+  background: $grayLight;
+  box-shadow: inset 0px 0px 0px 1px $grayDark;
+}
+.score__item__label {
+  text-align: left;
+  font-size: 14px;
+}
+.score__item__value {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.attacks__item {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 15px 0px;
+}
+.attacks__item__title {
+  width: 100%;
+  text-align: left;
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-transform: capitalize;
+}
+
+.attacks__item__line {
+  display: flex;
+  width: 100%;
+}
+.attacks__item__line__title {
+  flex: 1;
+  text-align: left;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.attacks__item__line__title--bigger {
+  flex: 2;
+}
+.attacks__item__line__value {
+  flex: 1;
+  text-align: left;
+}
+.attacks__item__line__value--bigger {
+  flex: 2;
 }
 </style>

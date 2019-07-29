@@ -26,6 +26,20 @@ export const getPokemon = (id: string) => {
   const query = `{
     pokemon(id: "${id}") {
       name
+      maxCP
+      maxHP
+      attacks {
+        fast {
+          name
+          type
+          damage
+        }
+        special {
+          name
+          type
+          damage
+        }
+      }
     }
   }`;
   return req(query);
